@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DecideForMe - IA Real</title>
+    <title>DecideForMe</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -59,9 +59,28 @@
         .feedback button { width: auto; padding: 10px 25px; }
         .thumbs-up { background: linear-gradient(135deg, #11998e, #38ef7d); }
         .thumbs-down { background: linear-gradient(135deg, #eb3349, #f45c43); }
-        .disclaimer { text-align: center; color: #999; margin-top: 20px; font-size: .9em; }
         #history { margin-top: 40px; }
-        #history h3 { color: #667eea; margin-bottom: 15px; }
+        .history-toggle {
+            color: #667eea;
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .history-toggle:hover { opacity: 0.8; }
+        .arrow {
+            transition: transform 0.3s;
+            display: inline-block;
+        }
+        .arrow.open { transform: rotate(90deg); }
+        .history-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        .history-content.open { max-height: 1000px; }
         .history-item {
             padding: 15px;
             margin: 10px 0;
@@ -98,8 +117,13 @@
         </div>
         
         <div id="history">
-            <h3>Historial</h3>
-            <div id="historyList"></div>
+            <div class="history-toggle" onclick="toggleHistory()">
+                <span class="arrow">▶</span>
+                <h3 style="margin: 0;">Historial</h3>
+            </div>
+            <div class="history-content" id="historyContent">
+                <div id="historyList"></div>
+            </div>
         </div>
     </div>
 
@@ -155,6 +179,13 @@
             document.getElementById('historyList').innerHTML = history
                 .map(h => `<div class="history-item"><small>${h.timestamp}</small>${h.decision}</div>`)
                 .join('') || '<p style="color: #999">Sin historial aún</p>';
+        }
+        
+        function toggleHistory() {
+            const content = document.getElementById('historyContent');
+            const arrow = document.querySelector('.arrow');
+            content.classList.toggle('open');
+            arrow.classList.toggle('open');
         }
         
         displayHistory();
